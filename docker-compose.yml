@@ -5,7 +5,7 @@
 # En production, superposer docker-compose.prod.yml (Traefik + TLS).
 
 services:
-  web:
+  lionel:
     build: .
     image: ttmr-report:${VERSION:-latest}
     restart: unless-stopped

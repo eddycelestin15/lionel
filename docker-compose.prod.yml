@@ -13,16 +13,16 @@
 
 services:
   # ── ttmr-report — lionel.flycelest.com ────────────────────────
-  web:
+  lionel:
     networks:
       - default
       - traefik
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.lionel-web.rule=Host(`lionel.flycelest.com`)"
-      - "traefik.http.routers.lionel-web.entrypoints=websecure"
-      - "traefik.http.routers.lionel-web.tls.certresolver=letsencrypt"
-      - "traefik.http.services.lionel-web.loadbalancer.server.port=3000"
+      - "traefik.http.routers.lionel.rule=Host(`lionel.flycelest.com`)"
+      - "traefik.http.routers.lionel.entrypoints=websecure"
+      - "traefik.http.routers.lionel.tls.certresolver=letsencrypt"
+      - "traefik.http.services.lionel.loadbalancer.server.port=3000"
       # Le conteneur est sur deux réseaux : on désigne celui que Traefik doit
       # emprunter, sans quoi il peut choisir la mauvaise adresse.
       - "traefik.docker.network=${TRAEFIK_NETWORK:-flycelest-api_default}"
