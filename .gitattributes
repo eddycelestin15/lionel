@@ -1,0 +1,3 @@
+# Le dépôt stocke des fins de ligne LF : l'image est construite sous Linux.
+* text=auto eol=lf
+*.ico binary

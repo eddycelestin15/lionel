@@ -1,0 +1,33 @@
+# docker-compose.prod.yml — surcouche de production (à combiner avec la base)
+#
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# Traefik tourne au niveau de l'hôte, partagé avec les autres services : ce
+# fichier ne le déclare pas, il s'y raccroche. Le réseau visé est celui du
+# projet Traefik existant — surchargeable par TRAEFIK_NETWORK dans .env :
+#
+#   docker network ls        # repérer le réseau auquel Traefik est attaché
+#
+# Le résolveur « letsencrypt » et l'entrypoint « websecure » sont ceux déjà
+# configurés sur ce Traefik.
+
+services:
+  # ── ttmr-report — lionel.flycelest.com ────────────────────────
+  web:
+    networks:
+      - default
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.lionel-web.rule=Host(`lionel.flycelest.com`)"
+      - "traefik.http.routers.lionel-web.entrypoints=websecure"
+      - "traefik.http.routers.lionel-web.tls.certresolver=letsencrypt"
+      - "traefik.http.services.lionel-web.loadbalancer.server.port=3000"
+      # Le conteneur est sur deux réseaux : on désigne celui que Traefik doit
+      # emprunter, sans quoi il peut choisir la mauvaise adresse.
+      - "traefik.docker.network=${TRAEFIK_NETWORK:-flycelest-api_default}"
+
+networks:
+  traefik:
+    external: true
+    name: ${TRAEFIK_NETWORK:-flycelest-api_default}

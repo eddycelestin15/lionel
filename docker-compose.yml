@@ -1,0 +1,22 @@
+# docker-compose.yml — exécution de l'image de production.
+#
+#   docker compose up -d --build     # http://localhost:3000
+#
+# En production, superposer docker-compose.prod.yml (Traefik + TLS).
+
+services:
+  web:
+    build: .
+    image: ttmr-report:${VERSION:-latest}
+    restart: unless-stopped
+    ports:
+      # Bornée à la boucle locale : en production c'est Traefik qui expose.
+      - "${BIND_ADDR:-127.0.0.1}:${PORT:-3000}:3000"
+    environment:
+      TZ: ${TZ:-Indian/Mauritius}
+    volumes:
+      # Les cycles importés depuis /import vivent hors du conteneur.
+      - ttmr_data:/app/data
+
+volumes:
+  ttmr_data:
